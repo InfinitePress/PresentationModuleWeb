@@ -3,8 +3,14 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>InfinitePress Sample</title>
+    <script src="../bower/angular/angular.min.js"></script>
+    <script src="../dist/presentationengine.min.js"></script>
+
 </head>
-<body>
-InfinitePress Sample
+<body ng-app="samplePresentation">
+<div  ng-controller="presentationController">
+    <span>{{welcome}}</span>
+    <span>presentationengine module ok? {{presentationengineExists}}</span>
+</div>
 </body>
 </html>
