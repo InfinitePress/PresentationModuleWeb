@@ -1,0 +1,29 @@
+{
+  "generator-angular-package": {
+    "props": {
+      "author": {
+        "name": "Clovis Chedid",
+        "email": "infinitepress.info@gmail.com"
+      },
+      "yourModule": {
+        "original": "PresentationEngine",
+        "camelized": "presentationEngine",
+        "dasherized": "-presentation-engine",
+        "slugified": "presentationengine",
+        "parts": [
+          "presentationengine"
+        ]
+      },
+      "includeModuleDirectives": true,
+      "includeModuleFilters": true,
+      "includeModuleServices": true,
+      "includeModuleControllers": true,
+      "includeAngularModuleResource": false,
+      "includeAngularModuleCookies": false,
+      "includeAngularModuleSanitize": false,
+      "moduleDirectory": "modules/presentationengine",
+      "moduleUnitTestDirectory": "test/unit/presentationengine",
+      "moduleUnitE2eDirectory": "test/e2e/presentationengine"
+    }
+  }
+}
