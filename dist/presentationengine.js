@@ -44,7 +44,7 @@ angular.module('presentationengine').directive('presentationScreen', [
       restrict: 'E',
       replace: 'false',
       scope: {},
-      templateUrl: '../view-templates/presentation-screen-view.html',
+      templateUrl: 'view-templates/presentation-screen-view.html',
       link: function postLink(scope, element, attrs) {
 
       }
@@ -104,7 +104,7 @@ angular.module('presentationengine').directive('presentationStep', [
       restrict: 'E',
       replace: 'false',
       scope: {},
-      templateUrl: '../view-templates/presentation-step-view.html',
+      templateUrl: 'view-templates/presentation-step-view.html',
       link: function postLink(scope, element, attrs) {
 
       }
