@@ -7,6 +7,7 @@ var path = require('path');
 var plumber = require('gulp-plumber');
 var runSequence = require('run-sequence');
 var jshint = require('gulp-jshint');
+var flatten = require('gulp-flatten');
 
 /**
  * File patterns
@@ -26,6 +27,10 @@ var sourceFiles = [
   // Then add all JavaScript files
   path.join(sourceDirectory, '/**/*.js')
 ];
+var resourceFiles = [
+  path.join(sourceDirectory,'/**/*.html')
+];
+console.log(resourceFiles);
 
 var lintFiles = [
   'gulpfile.js',
@@ -43,11 +48,17 @@ gulp.task('build', function() {
     .pipe(gulp.dest('./dist'));
 });
 
+gulp.task('copy_resources', function() {
+  gulp.src(resourceFiles)
+    .pipe(flatten())
+    .pipe(gulp.dest('./dist/view-templates'));
+});
+
 /**
  * Process
  */
 gulp.task('process-all', function (done) {
-  runSequence('jshint', 'test-src', 'build', done);
+  runSequence('jshint', 'test-src', 'build', 'copy_resources', done);
 });
 
 /**
