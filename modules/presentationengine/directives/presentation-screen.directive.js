@@ -8,7 +8,7 @@ angular.module('presentationengine').directive('presentationScreen', [
       restrict: 'E',
       replace: 'false',
       scope: {},
-      templateUrl: '../view-templates/presentation-screen-view.html',
+      templateUrl: 'view-templates/presentation-screen-view.html',
       link: function postLink(scope, element, attrs) {
 
       }
