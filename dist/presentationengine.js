@@ -1,4 +1,40 @@
-angular.module("templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("view-templates/presentation-screen-view.html","<div id=\"presentation-screen\">\n  teste\n</div>\n");
+(function (angular) {
+
+  // Create all modules and define dependencies to make sure they exist
+  // and are loaded in the correct order to satisfy dependency injection
+  // before all nested files are concatenated by Gulp
+
+  // Config
+  angular.module('presentationengine.config', [])
+      .value('presentationengine.config', {
+          debug: true
+      });
+
+  // Modules
+  
+  angular.module('presentationengine.directives', []);
+  
+  
+  angular.module('presentationengine.filters', []);
+  
+  
+  angular.module('presentationengine.services', []);
+  
+  
+    angular.module('presentationengine.controllers', []);
+  
+  angular.module('presentationengine',
+      [
+        'presentationengine.config',
+        'presentationengine.directives',
+        'presentationengine.filters',
+        'presentationengine.services',
+        'presentationengine.controllers'
+      ]);
+
+})(angular);
+
+angular.module("presentationengine").run(["$templateCache", function($templateCache) {$templateCache.put("view-templates/presentation-screen-view.html","<div id=\"presentation-screen\">\n  teste\n</div>\n");
 $templateCache.put("view-templates/presentation-shape-image-view.html","\n");
 $templateCache.put("view-templates/presentation-shape-text-view.html","\n");
 $templateCache.put("view-templates/presentation-step-view.html","<div id=\"presentation-step\">\n  teste\n</div>\n");}]);
