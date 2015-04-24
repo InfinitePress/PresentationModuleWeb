@@ -11,7 +11,7 @@ var flatten = require('gulp-flatten');
 var templateCache = require('gulp-angular-templatecache');
 var clean = require('gulp-clean');
 var debug = require('gulp-debug');
-var merge = require('merge-stream');
+var streamQueue = require('streamqueue');
 
 /**
  * File patterns
@@ -61,7 +61,7 @@ gulp.task('clean_build', function() {
 gulp.task('build', function() {
   console.log(buildFiles);
   var buildStream = gulp.src(sourceFiles);
-  var stream = merge(resourceStream, buildStream);
+  var stream = streamQueue({ objectMode: true }, resourceStream, buildStream);
     stream.pipe(debug())
     .pipe(plumber())
     .pipe(concat('presentationengine.js'))
@@ -74,7 +74,7 @@ gulp.task('build', function() {
 gulp.task('build_resources', function() {
   resourceStream = gulp.src(resourceFiles)
     .pipe(flatten())
-    .pipe(templateCache('templates.js',{root:'view-templates'}))
+    .pipe(templateCache('templates.js',{root:'view-templates',standalone:true}))
     .pipe(gulp.dest('./dist'));
 });
 
