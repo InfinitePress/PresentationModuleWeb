@@ -44,7 +44,10 @@ if (fs.existsSync(sourceDirectory)) {
         name:folder,
         sourceFiles: [
           path.join(sourceDirectory, '/' + folder + '/*.module.js'),
-          path.join(sourceDirectory, '/' + folder + '/**/*.js')
+          path.join(sourceDirectory, '/' + folder + '/controllers/*.js'),
+          path.join(sourceDirectory, '/' + folder + '/directives/*.js'),
+          path.join(sourceDirectory, '/' + folder + '/filters/*.js'),
+          path.join(sourceDirectory, '/' + folder + '/services/*.js')
         ],
         resourceFiles: [
           path.join(sourceDirectory, '/' + folder + '/directives/view-templates/*.html')
@@ -116,8 +119,16 @@ gulp.task('test-dist-minified', function (done) {
 
 gulp.task('build', function() {
   sourceFiles.forEach(function(module){
-    var moduleStream = gulp.src(module.sourceFiles[0]),
-      sourceStream = gulp.src(module.sourceFiles[1]),
+    console.log(module.sourceFiles[1]);
+
+    var sources = [
+        module.sourceFiles[1],
+        module.sourceFiles[2],
+        module.sourceFiles[3],
+        module.sourceFiles[4]
+      ],
+      moduleStream = gulp.src(module.sourceFiles[0]),
+      sourceStream = gulp.src(sources),
       stream = streamQueue({ objectMode: true }, moduleStream, module.resourceStream, sourceStream);
 
     stream.pipe(debug())
