@@ -11,18 +11,18 @@
       });
 
   // Modules
-  
+
   angular.module('presentationengine.directives', []);
-  
-  
+
+
   angular.module('presentationengine.filters', []);
-  
-  
+
+
   angular.module('presentationengine.services', []);
-  
-  
+
+
     angular.module('presentationengine.controllers', []);
-  
+
   angular.module('presentationengine',
       [
         'presentationengine.config',
@@ -31,5 +31,19 @@
         'presentationengine.services',
         'presentationengine.controllers'
       ]);
+
+  angular.module('presentationengine').run([
+    '$rootScope',
+    function($rootScope){
+      document.onkeydown = function(e) {
+        // Get keycode and broadcast it
+        var keyCode = e.keyCode;
+
+        $rootScope.$apply(function(){
+          $rootScope.$broadcast('keypressed', {key:keyCode});
+        });
+      };
+    }
+  ]);
 
 })(angular);
