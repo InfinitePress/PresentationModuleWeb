@@ -3,18 +3,93 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>InfinitePress Sample</title>
-    <script src="../bower/angular/angular.min.js"></script>
-    <script src="../dist/presentationengine.min.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/IndexController.js"></script>
+    <link rel="stylesheet" href="../bower/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/prism.css">
+  <script src="js/prism.js"></script>
 </head>
-<body ng-app="samplePresentation">
-<div  ng-controller="presentationController">
-    <p>{{welcome}}</p>
-    <span>presentationengine module ok? {{presentationengineExists}}</span>
+<body ng-app="samplePresentation" ng-controller="presentationController">
+<div class="container">
+  <div class="row">&nbsp;</div>
+  <div class="row">
+    <div class="col-md-12">
+      <div>
+        <p>{{welcome}}</p>
+        <span>presentationengine module ok? {{presentationengineExists}}</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <p>com model</p>
+      <presentation-screen title="a" presentation-data="presentationData">
+        <presentation-step title="1">
+          <span>teste transclude1 - title: {{$parent.title}} - selected {{selected}} - id {{$parent.$id}} - parent title: {{$parent.$parent.$id}}</span>
+        </presentation-step>
+        <presentation-step title="2">
+          <span>teste transclude2 - title: {{$parent.title}} - selected {{selected}} - id {{$parent.$id}} - parent title: {{$parent.$parent.$id}}</span>
+        </presentation-step>
+      </presentation-screen>
+    </div>
+    <div class="col-md-6">
+      <h2>JSON data for presentation</h2>
+      <code class="language-javascript">
+        presentationData = {
+          steps:[
+            {
+              elements:[
+                {content:'Element 1 - Content 1'},
+                {content:'Element 1 - Content 2'}
+              ]
+            },
+            {
+              elements:[
+                {content:'Element 2 - Content 1'}
+              ]
+            }
+          ]
+        }
+      </code>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <p>Sem model</p>
+      <presentation-screen title="a">
+        <presentation-step title="1">
+          <p>Element 1 - Content 1</p>
+          <p>Element 1 - Content 2</p>
+        </presentation-step>
+        <presentation-step title="2">
+          <p>Element 2 - Content 1</p>
+        </presentation-step>
+      </presentation-screen>
+    </div>
+    <div class="col-md-6" ng-non-bindable>
+      <h2>HTML code for presentation</h2>
+      <pre>
+        <code class="language-markup">
+          &lt;presentation-screen title="a"&gt;
+          &lt;presentation-step title="1"&gt;
+          &lt;p&gt;Element 1 - Content 1
+          &lt;/p&gt;
+          &lt;p&gt;Element 1 - Content 2
+          &lt;/p&gt;
+          &lt;/presentation-step&gt;
+          &lt;presentation-step title="2"&gt;
+          &lt;p&gt;Element 2 - Content 1
+          &lt;/p&gt;
+          &lt;/presentation-step&gt;
+          &lt;/presentation-screen&gt;
+        </code>
+      </pre>
+    </div>
+  </div>
 </div>
-<presentation-screen>
-    <presentation-step></presentation-step>
-</presentation-screen>
+<script src="../bower/jquery/dist/jquery.min.js"></script>
+<script src="../bower/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../bower/angular/angular.min.js"></script>
+<script src="../dist/presentationengine.js"></script>
+<script src="js/app.js"></script>
+<script src="js/IndexController.js"></script>
 </body>
 </html>
