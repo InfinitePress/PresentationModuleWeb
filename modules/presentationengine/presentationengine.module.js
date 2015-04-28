@@ -4,6 +4,12 @@
   // and are loaded in the correct order to satisfy dependency injection
   // before all nested files are concatenated by Gulp
 
+  try {
+    var module = angular.module('presentationengine.templates');
+  } catch (e) {
+    var module = angular.module('presentationengine.templates', []);
+  }
+
   // Config
   angular.module('presentationengine.config', [])
       .value('presentationengine.config', {
@@ -25,6 +31,7 @@
 
   angular.module('presentationengine',
       [
+        'presentationengine.templates',
         'presentationengine.config',
         'presentationengine.directives',
         'presentationengine.filters',

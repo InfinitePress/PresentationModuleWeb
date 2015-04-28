@@ -10,7 +10,7 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'chai-jquery', 'jquery-1.8.3', 'sinon-chai'],
+    frameworks: ['jasmine', 'mocha', 'chai-jquery', 'jquery-1.8.3', 'sinon-chai'],
 
     plugins: [
       'karma-mocha',
@@ -20,13 +20,16 @@ module.exports = function(config) {
       'karma-phantomjs-launcher',
       'karma-jquery',
       'karma-chai-jquery',
-      'karma-spec-reporter'
+      'karma-spec-reporter',
+      'karma-ng-html2js-preprocessor',
+      'karma-jasmine'
     ],
 
     // list of files / patterns to load in the browser
     files: [
       'bower/angular/angular.js',
       'bower/angular-mocks/angular-mocks.js',
+      'modules/**/*.html',
       'modules/**/*.module.js',
       'modules/**/*.js',
       'test/unit/**/*.js'
@@ -41,6 +44,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'modules/**/*.html': ['ng-html2js']
     },
 
 
@@ -69,11 +73,29 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['PhantomJS'],
+    //browsers: ['PhantomJS'],
+    browsers: ['Chrome'],
 
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    singleRun: false,
+
+    ngHtml2JsPreprocessor: {
+      // strip this from the file path
+      stripPrefix: 'modules/presentationengine/directives/',
+      //stripSufix: '.ext',
+      //// prepend this to the
+      //prependPrefix: 'served/',
+
+      // or define a custom transform function
+      //cacheIdFromPath: function(filepath) {
+      //  return cacheId;
+      //},
+
+      // setting this option will create only a single module that contains templates
+      // from all the files, so you can load them all with module('foo')
+      moduleName: 'presentationengine.templates'
+    }
   });
 };

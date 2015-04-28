@@ -18,31 +18,31 @@ describe('', function() {
   });
 
   it('should load config module', function() {
-    expect(hasModule('presentationengine.config')).to.be.ok;
+    expect(hasModule('presentationengine.config')).toBe(true);
   });
 
-  
+
   it('should load filters module', function() {
-    expect(hasModule('presentationengine.filters')).to.be.ok;
+    expect(hasModule('presentationengine.filters')).toBe(true);
   });
-  
 
-  
+
+
   it('should load directives module', function() {
-    expect(hasModule('presentationengine.directives')).to.be.ok;
+    expect(hasModule('presentationengine.directives')).toBe(true);
   });
-  
 
-  
+
+
   it('should load services module', function() {
-    expect(hasModule('presentationengine.services')).to.be.ok;
+    expect(hasModule('presentationengine.services')).toBe(true);
   });
-  
 
-  
+
+
     it('should load controllers module', function() {
-      expect(hasModule('presentationengine.controllers')).to.be.ok;
+      expect(hasModule('presentationengine.controllers')).toBe(true);
     });
-  
+
 
 });

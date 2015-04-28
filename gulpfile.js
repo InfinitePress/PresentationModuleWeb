@@ -98,6 +98,16 @@ gulp.task('test-src', function (done) {
 });
 
 /**
+ * Run test continuous
+ */
+gulp.task('test-src-continuous', function (done) {
+  karma.start({
+    configFile: __dirname + '/karma-src.conf.js',
+    singleRun: false
+  }, done);
+});
+
+/**
  * Run test once and exit
  */
 gulp.task('test-dist-concatenated', function (done) {
@@ -139,36 +149,30 @@ gulp.task('build', function() {
       .pipe(rename('presentationengine.min.js'))
       .pipe(gulp.dest('./dist'));
   });
-  //var buildStream = gulp.src(sourceFiles);
-  //var stream = streamQueue({ objectMode: true }, resourceStream, buildStream);
-  //  stream.pipe(debug())
-  //  .pipe(plumber())
-  //  .pipe(concat('presentationengine.js'))
-  //  .pipe(gulp.dest('./dist/'))
-  //  .pipe(uglify())
-  //  .pipe(rename('presentationengine.min.js'))
-  //  .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('build_resources', function() {
   sourceFiles.forEach(function(module){
     var resourceStream = gulp.src(module.resourceFiles[0])
       .pipe(flatten())
-      .pipe(templateCache(module.name + '-templates.js',{root:'view-templates',module:module.name}))
+      .pipe(templateCache(module.name + '-templates.js',{root:'view-templates',module:module.name + '.templates'}))
       .pipe(gulp.dest('./dist'));
     module.resourceStream = resourceStream;
   });
-  //resourceStream = gulp.src(resourceFiles)
-  //  .pipe(flatten())
-  //  .pipe(templateCache('templates.js',{root:'view-templates',standalone:true}))
-  //  .pipe(gulp.dest('./dist'));
 });
 
 /**
  * Process
  */
 gulp.task('process-all', function (done) {
-  runSequence('clean_build', 'jshint', 'test-src', 'build_resources', 'build',  done);
+  runSequence('clean_build', 'jshint', 'test-src', 'build_resources', 'build', done);
+});
+
+/**
+ * Process
+ */
+gulp.task('test-forever', function (done) {
+  runSequence('clean_build', 'jshint', 'test-src-continuous', done);
 });
 
 /**
