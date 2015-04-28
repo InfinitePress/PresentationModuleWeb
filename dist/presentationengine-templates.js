@@ -1,0 +1,4 @@
+angular.module("presentationengine.templates").run(["$templateCache", function($templateCache) {$templateCache.put("view-templates/presentation-element-image-view.html","<!-- Presentation Element type Image -->\n<div>\n  <img src=\"\">\n</div>\n");
+$templateCache.put("view-templates/presentation-element-text-view.html","<!-- Presentation Element type Text -->\n<div id=\"bodyElementText\" ng-transclude></div>\n");
+$templateCache.put("view-templates/presentation-screen-view.html","<!-- Presentation Screen Element -->\n<div id=\"bodyScreen\" ng-transclude>\n</div>\n");
+$templateCache.put("view-templates/presentation-step-view.html","<!-- Presentation Step Element -->\n<div id=\"bodyStep\" ng-show=\"selected\"  ng-transclude>\n</div>\n");}]);
