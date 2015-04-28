@@ -4,6 +4,12 @@
   // and are loaded in the correct order to satisfy dependency injection
   // before all nested files are concatenated by Gulp
 
+  try {
+    var module = angular.module('presentationengine.templates');
+  } catch (e) {
+    var module = angular.module('presentationengine.templates', []);
+  }
+
   // Config
   angular.module('presentationengine.config', [])
       .value('presentationengine.config', {
@@ -25,6 +31,7 @@
 
   angular.module('presentationengine',
       [
+        'presentationengine.templates',
         'presentationengine.config',
         'presentationengine.directives',
         'presentationengine.filters',
@@ -48,14 +55,114 @@
 
 })(angular);
 
-angular.module("presentationengine").run(["$templateCache", function($templateCache) {$templateCache.put("view-templates/presentation-screen-view.html","<div id=\"bodyScreen\" ng-transclude>\n</div>\n");
-$templateCache.put("view-templates/presentation-shape-image-view.html","\n");
-$templateCache.put("view-templates/presentation-shape-text-view.html","\n");
-$templateCache.put("view-templates/presentation-step-view.html","<div id=\"bodyStep\" ng-show=\"selected\"  ng-transclude>\n</div>\n");}]);
+angular.module("presentationengine.templates").run(["$templateCache", function($templateCache) {$templateCache.put("view-templates/presentation-element-image-view.html","<!-- Presentation Element type Image -->\n<div>\n  <img src=\"\">\n</div>\n");
+$templateCache.put("view-templates/presentation-element-text-view.html","<!-- Presentation Element type Text -->\n<div id=\"bodyElementText\" ng-transclude></div>\n");
+$templateCache.put("view-templates/presentation-screen-view.html","<!-- Presentation Screen Element -->\n<div id=\"bodyScreen\" ng-transclude>\n</div>\n");
+$templateCache.put("view-templates/presentation-step-view.html","<!-- Presentation Step Element -->\n<div id=\"bodyStep\" ng-show=\"selected\"  ng-transclude>\n</div>\n");}]);
 /**
  * Created by coichedid on 21/04/15.
  */
 'use strict';
+angular.module('presentationengine').directive('presentationElementImage', [
+  function() {
+    return {
+      template: '<div></div>',
+      restrict: 'E',
+      replace: 'false',
+      scope: {},
+      link: function postLink(scope, element, attrs) {
+        // Presentation shape image directive logic
+        // ...
+
+        element.text('this is the presentationElementImage directive');
+      }
+    };
+  }
+]);
+
+/**
+ * Created by coichedid on 21/04/15.
+ */
+'use strict';
+
+var PresentationElementTextController = function($scope, $element) {
+
+};
+
+angular.module('presentationengine').directive('presentationElementText', [
+  function() {
+    return {
+      restrict: 'E',
+      // this directive needs to be presentationStep child, so we can get it's controller
+      require: '^presentationStep',
+      transclude: true,
+      scope: {
+        elementData: '='
+      },
+      controller: PresentationElementTextController,
+      templateUrl: 'view-templates/presentation-element-text-view.html',
+      compile: function(tElem, tAttrs){
+        return {
+          pre: function (scope, el, attrs, ctrl, transclude) {
+
+          },
+          post: function (scope, el, attrs, stepCtrl, transclude) {
+            stepCtrl.addElement(scope);
+          }
+        };
+      }
+    };
+  }
+]);
+
+/**
+ * Created by coichedid on 21/04/15.
+ */
+'use strict';
+var PresentationScreenController = function($scope, $element) {
+  var steps = $scope.steps = [],
+    currentStepIndex = 0,
+    numSteps = 0;
+
+  // process key pressed to rewind or forward presentation
+  $scope.$on('keypressed',function(event,args){
+    switch(args.key) {
+      case 39:
+      case 40: // right and down keys makes presentation goes forward
+        if (currentStepIndex < numSteps - 1) {
+          $scope.select(currentStepIndex + 1);
+        }
+        break;
+      case 37:
+      case 38: // left and up keys makes presentation goes rewind
+        if (currentStepIndex > 0) {
+          $scope.select(currentStepIndex - 1);
+        }
+        break;
+    }
+  });
+
+  // select a step based on current index
+  // set current step's scope.select to true and all others to false
+  $scope.select = function(index) {
+    angular.forEach(steps, function(step) {
+      step.selected = false;
+    });
+    var step = steps[index];
+    step.selected = true;
+    currentStepIndex = index;
+  };
+
+  // register step on presentation screen
+  this.addStep = function(step) {
+    steps.push(step);
+    numSteps++;
+    if (steps.length === 1) {
+      $scope.select(0);
+    }
+  };
+};
+
 angular.module('presentationengine').directive('presentationScreen',
   function($compile) {
     return {
@@ -66,50 +173,7 @@ angular.module('presentationengine').directive('presentationScreen',
         presentationData: '='
       },
       templateUrl: 'view-templates/presentation-screen-view.html',
-      controller: function($scope) {
-        var steps = $scope.steps = [],
-          currentStepIndex = 0,
-          numSteps = 0;
-
-        // process key pressed to rewind or forward presentation
-        $scope.$on('keypressed',function(event,args){
-          switch(args.key) {
-            case 39:
-            case 40: // right and down keys makes presentation goes forward
-              if (currentStepIndex < numSteps - 1) {
-                currentStepIndex++;
-                $scope.select(currentStepIndex);
-              }
-              break;
-            case 37:
-            case 38: // left and up keys makes presentation goes rewind
-              if (currentStepIndex > 0) {
-                currentStepIndex--;
-                $scope.select(currentStepIndex);
-              }
-              break;
-          }
-        });
-
-        // select a step based on current index
-        // set current step's scope.select to true and all others to false
-        $scope.select = function(index) {
-          angular.forEach(steps, function(step) {
-            step.selected = false;
-          });
-          var step = steps[index];
-          step.selected = true;
-        };
-
-        // register step on presentation screen
-        this.addStep = function(step) {
-          steps.push(step);
-          numSteps++;
-          if (steps.length === 1) {
-            $scope.select(0);
-          }
-        };
-      },
+      controller: PresentationScreenController,
 
       compile: function(tElem, tAttrs){
         if (tAttrs.presentationData) {
@@ -150,48 +214,17 @@ angular.module('presentationengine').directive('presentationScreen',
  * Created by coichedid on 21/04/15.
  */
 'use strict';
-angular.module('presentationengine').directive('presentationShapeImage', [
-  function() {
-    return {
-      template: '<div></div>',
-      restrict: 'E',
-      replace: 'false',
-      scope: {},
-      link: function postLink(scope, element, attrs) {
-        // Presentation shape image directive logic
-        // ...
+var PresentationStepController = function($scope, $element){
+  var elements = $scope.elements = [],
+    numElements = 0;
 
-        element.text('this is the presentationShapeImage directive');
-      }
-    };
-  }
-]);
+  // register step on presentation screen
+  this.addElement = function(element) {
+    elements.push(element);
+    numElements++;
+  };
+};
 
-/**
- * Created by coichedid on 21/04/15.
- */
-'use strict';
-angular.module('presentationengine').directive('presentationShapeText', [
-  function() {
-    return {
-      template: '<div></div>',
-      restrict: 'E',
-      replace: 'false',
-      scope: {},
-      link: function postLink(scope, element, attrs) {
-        // Presentation shape text directive logic
-        // ...
-
-        element.text('this is the presentationShapeText directive');
-      }
-    };
-  }
-]);
-
-/**
- * Created by coichedid on 21/04/15.
- */
-'use strict';
 angular.module('presentationengine').directive('presentationStep',
   function($compile) {
     return {
@@ -203,6 +236,7 @@ angular.module('presentationengine').directive('presentationStep',
         title: '@',
         elementsData: '='
       },
+      controller: PresentationStepController,
       templateUrl: 'view-templates/presentation-step-view.html',
       compile: function(tElem, tAttrs){
         if (tAttrs.elementsData) {
@@ -221,8 +255,30 @@ angular.module('presentationengine').directive('presentationStep',
                 // create a isolated scope for this step
                 var privateScope = scope.$new(true);
                 privateScope.content = element.content || '';
-                var stepElement = $compile('<p>{{content}}' +
-                  '</p>')(privateScope);
+
+                // Switch between elements types [text, image, line, shape]
+                var elementName = '';
+                switch(element.type) {
+                  case 'text':
+                    elementName = 'presentation-element-text';
+                        break;
+                  case 'image':
+                    elementName = 'presentation-element-image';
+                        break;
+                  case 'line':
+                    elementName = 'presentation-element-line';
+                        break;
+                  case 'shape':
+                    elementName = 'presentation-element-shape';
+                        break;
+                }
+
+                if (elementName === '') {
+                  throw new Error('Unknown presentation element type');
+                }
+
+                var stepElement = $compile('<' + elementName + '>{{content}}' +
+                  '</' + elementName + '>')(privateScope);
                 // append newly created element
                 body.append(stepElement);
               });
